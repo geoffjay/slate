@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gnome/libslate/ui">
+    <file compressed="true" alias="box.ui">box.ui</file>
+  </gresource>
+</gresources>

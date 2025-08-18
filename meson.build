@@ -4,11 +4,12 @@ project(
   ['vala', 'c'],
   version: '0.1.0',
   meson_version: '>= 1.4.0',
-  default_options: [ 'c_std=gnu11',
-                     'cpp_std=gnu++2a',
-                     'warning_level=2',
-                     'channel=other',
-                   ],
+  default_options: [
+    'c_std=gnu11',
+    'cpp_std=gnu++2a',
+    'warning_level=2',
+    'channel=other',
+  ],
 )
 
 version_split = meson.project_version().split('.')
@@ -19,9 +20,11 @@ MICRO_VERSION = version_split[2]
 api_version = '1.0'
 
 status = [
-  '', '',
+  '',
+  '',
   'Slate @0@'.format(meson.project_version()),
-  '', '',
+  '',
+  '',
 ]
 
 # Warning message
@@ -29,7 +32,8 @@ if (version_split[1].to_int() % 2 == 1)
   status += [
     'You are building a debug version of Slate. There may be more bugs in',
     'this version that you are comfortable with.',
-    '', ''
+    '',
+    '',
   ]
 endif
 
@@ -39,7 +43,8 @@ status += [
   '',
   'Prefix ................................ : @0@'.format(get_option('prefix')),
   'Libdir ................................ : @0@'.format(join_paths(get_option('prefix'), get_option('libdir'))),
-  '', ''
+  '',
+  '',
 ]
 
 c_flags = [
@@ -66,14 +71,15 @@ py = import('python').find_installation('python3.13', required: true)
 blueprint_compiler_prog = find_program('blueprint-compiler', required: true)
 
 lib_dependencies = [
-    dependency('gtk4'),
-    dependency('libadwaita-1'),
-    dependency('gio-2.0'),
-    dependency('sqlite3'),
-    dependency('gee-0.8'),
+  dependency('gtk4'),
+  dependency('libadwaita-1'),
+  dependency('gio-2.0'),
+  dependency('sqlite3'),
+  dependency('gee-0.8'),
 ]
 
 subdir('data')
 subdir('src')
+subdir('tests')
 
 message('\n'.join(status))

@@ -70,12 +70,17 @@ gnome = import('gnome')
 py = import('python').find_installation('python3.13', required: true)
 blueprint_compiler_prog = find_program('blueprint-compiler', required: true)
 
+# Subprojects
+libghcl_subproject = subproject('libghcl')
+libghcl_dep = libghcl_subproject.get_variable('libghcl_dep')
+
 lib_dependencies = [
   dependency('gtk4'),
   dependency('libadwaita-1'),
   dependency('gio-2.0'),
   dependency('sqlite3'),
   dependency('gee-0.8'),
+  libghcl_dep,
 ]
 
 subdir('data')

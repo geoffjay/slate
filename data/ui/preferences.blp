@@ -1,0 +1,35 @@
+using Gtk 4.0;
+using Adw 1;
+
+Adw.PreferencesDialog preferences_dialog {
+  title: _("Settings");
+
+  Adw.PreferencesPage general_page {
+    title: _("General");
+    icon-name: "emblem-system-symbolic";
+
+    Adw.PreferencesGroup {
+      title: _("Behavior");
+
+      Adw.ActionRow {
+        title: _("Example option");
+        subtitle: _("Coming soon");
+      }
+    }
+  }
+
+  Adw.PreferencesPage appearance_page {
+    title: _("Appearance");
+    icon-name: "preferences-desktop-theme-symbolic";
+
+    Adw.PreferencesGroup {
+      title: _("Theme");
+
+      Adw.ActionRow {
+        title: _("Theme selection");
+        subtitle: _("TBD");
+      }
+    }
+  }
+}
+

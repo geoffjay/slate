@@ -1,0 +1,7 @@
+---
+description: Focus on Meson build configuration files for project understanding.
+alwaysApply: false
+---
+When analyzing the project, prioritize understanding the contents of
+`meson.build` and `meson_options.txt` files to grasp the project's build
+structure, dependencies, and options.

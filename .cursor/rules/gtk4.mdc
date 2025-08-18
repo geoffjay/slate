@@ -1,0 +1,146 @@
+---
+alwaysApply: true
+---
+### Build & Project Structure
+
+- **Meson**: Use Meson for builds. Declare dependencies: `gtk4`, `libadwaita-1`, `gio-2.0`, `blueprint-compiler`. Compile Blueprint and GResources in Meson.
+- **Directories**:
+  - `data/`: `.blp`, `.ui`, `.gresource.xml`, icons, CSS, desktop and appdata.
+  - `src/`: C or Vala sources.
+  - `po/`: Translations (if present).
+- **Localization**: Use gettext. All user-facing strings must be translatable.
+
+---
+
+### C Guidelines (GTK4/GObject)
+
+- **Language level**: C11+. Use `g_autoptr`, `g_autofree`, and `g_clear_pointer` for safe cleanup where appropriate.
+- **Naming**:
+  - Types: `PrefixTypeName` (e.g., `SlateAppWindow`).
+  - Functions: `prefix_type_action` (e.g., `slate_app_window_new`).
+  - Signals/properties: kebab-case for public names (e.g., `"activated"`, `"visible"`).
+- **GObject**:
+  - Derive from the appropriate GTK/Adw base classes.
+  - Use `G_DEFINE_FINAL_TYPE` or `G_DEFINE_TYPE_WITH_PRIVATE` as needed.
+  - Expose properties for state that affects UI; bind with `g_object_bind_property` where possible.
+- **Memory & ownership**:
+  - Follow GLib ownership rules; document transfer semantics in function docs.
+  - Prefer `g_autoptr(GtkWidget)` for widget lifetimes when feasible.
+- **Signals & actions**:
+  - Prefer `GAction`/`GSimpleAction` for application and window actions; bind to UI elements via action names.
+  - Use `g_signal_connect` for widget signals; disconnect if needed to avoid leaks.
+- **Error handling**: Use `GError` for recoverable errors; early returns on error. Avoid silent failures.
+- **Strings**: Prefer double-quotes for string literals.
+
+Minimal skeleton:
+
+```c
+#include <adwaita.h>
+
+int main(int argc, char **argv) {
+  g_autoptr(AdwApplication) app = adw_application_new("org.example.App", G_APPLICATION_FLAGS_NONE);
+  g_signal_connect(app, "activate", G_CALLBACK(on_activate), NULL);
+  return g_application_run(G_APPLICATION(app), argc, argv);
+}
+
+static void on_activate(AdwApplication *app) {
+  AdwApplicationWindow *win = adw_application_window_new(app);
+  adw_application_window_present(win);
+}
+```
+
+---
+
+### Vala Guidelines (GTK4/GObject)
+
+- **Language**: Target Vala with `--pkg gtk4 --pkg libadwaita-1` (or via Meson).
+- **Classes**: Derive from GTK/Adw types. Use properties for state; leverage bindings and signals idiomatically.
+- **Nullability**: Annotate nullability; prefer non-null where possible.
+- **Actions**: Use `SimpleAction` and action groups on `Application`/`ApplicationWindow`.
+- **Error handling**: Use `errordomain` and `throws` for recoverable errors; handle with `try/catch`.
+- **Strings**: Prefer double-quotes for string literals.
+
+Minimal skeleton:
+
+```vala
+using Adw;
+using Gtk;
+
+int main(string[] args) {
+  Adw.init();
+  var app = new Application("org.example.App", ApplicationFlags.FLAGS_NONE);
+  app.activate.connect(() => {
+    var win = new ApplicationWindow(app);
+    win.present();
+  });
+  return app.run(args);
+}
+```
+
+---
+
+### UI & UX Requirements (HIG-driven)
+
+- **Windowing**: Use a single primary window with clear navigation (ViewSwitcher, Sidebar, or Tabs) per HIG. Avoid unnecessary dialogs and nested windows.
+- **Header bars**: Always include a header bar with primary actions, window controls, and navigation elements per HIG.
+- **Navigation**: Choose navigation patterns appropriate for content complexity (ViewStack + ViewSwitcher, Sidebar, or Tabs), consistent with HIG.
+- **Controls**: Use standard controls; prefer destructive actions behind secondary affordances and confirm them via dialogs when needed.
+- **Feedback**: Provide feedback with toasts, banners, or progress indicators as appropriate. Avoid blocking dialogs for non-critical info.
+- **Text & labels**: Follow HIG writing style and capitalization. Provide accessible labels and mnemonics.
+- **Keyboard**: Implement standard shortcuts and ensure controls are keyboard accessible.
+- **Touch & pointer**: Ensure hit targets and spacing meet HIG guidance; avoid tiny click targets.
+- **Accessibility**: Set accessible roles/names/relations; ensure focus order is logical; maintain sufficient color contrast.
+- **Responsive/adaptive**: Use Libadwaita responsive patterns (breakpoints, `AdwClamp`, `AdwToolbarView`) for small and large windows.
+
+Reference: [GNOME Human Interface Guidelines](https://developer.gnome.org/hig/index.html)
+
+---
+
+### Internationalization & Localization
+
+- Mark all user-facing strings for translation. In C, use `_()`, `N_()`; in Vala, use `dgettext`/`_()` as configured.
+- Avoid string concatenation for sentences; use placeholders and translator comments where needed.
+- Ensure date, time, numbers, and plurals are localized correctly.
+
+---
+
+### Resources, Blueprint, and CSS
+
+- Keep Blueprint files small and composable; use `id` and `action` attributes for bindings.
+- Use GResource for images and UI files; update `org.slate.app.gresource.xml` when adding assets.
+- Keep CSS minimal and scoped. Verify dark/light variants and contrast. Prefer Libadwaita defaults first.
+
+---
+
+### Performance & Startup
+
+- Defer heavy work until after `activate` using idles/timeouts if needed.
+- Avoid blocking the main loop; use `GTask`/`GThreadPool`/async APIs.
+- Batch UI updates to minimize redraws.
+
+---
+
+### Testing & QA Checklist (include in PRs)
+
+- HIG review performed and noted (link to relevant HIG sections if applicable): [GNOME Human Interface Guidelines](https://developer.gnome.org/hig/index.html)
+- Accessibility pass (roles, names, focus, contrast)
+- Keyboard navigation and standard shortcuts
+- i18n: strings marked; no clipped text under translation
+- Adaptive layout at common sizes (small/medium/large)
+- Dark/light mode verified
+- No critical warnings in logs on startup or during key flows
+
+---
+
+### Code Review Checklist
+
+- Uses Libadwaita/GTK4 patterns idiomatically; avoids custom re-implementations of standard widgets.
+- UI defined in Blueprint where static; code constructs only what must be dynamic.
+- Clear separation of UI and logic; properties bound instead of manual sync when possible.
+- Consistent naming with GObject conventions; docs for ownership and transfer.
+- Strings use double-quotes; all user-facing strings are translatable.
+- Explicit statement in PR description: "HIG checked" with notes on deviations.
+
+Reference for all UI/UX decisions: [GNOME Human Interface Guidelines](https://developer.gnome.org/hig/index.html)
+
+

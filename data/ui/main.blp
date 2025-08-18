@@ -7,21 +7,88 @@ ApplicationWindow main_window {
   default-height: 768;
 
   [titlebar]
-  HeaderBar {
-    title-widget: Adw.WindowTitle { title: "Slate"; };
+  HeaderBar header_bar {
+    title-widget: Adw.WindowTitle window_title { title: "Slate"; };
+
+    [start]
+    Button close_project_button {
+      tooltip-text: _("Close Project");
+      action-name: "app.close-project";
+      icon-name: "go-previous-symbolic";
+      visible: false;
+    }
+
+    [end]
+    Box project_actions_box {
+      spacing: 6;
+      Button create_button {
+        tooltip-text: _("Create Project");
+        action-name: "app.create-project";
+        icon-name: "list-add-symbolic";
+      }
+      Button add_button {
+        tooltip-text: _("Add Existing Project");
+        action-name: "app.add-project";
+        icon-name: "document-open-symbolic";
+      }
+    }
   }
 
-  Box {
+  Box content_box {
     orientation: vertical;
-    spacing: 12;
-    margin-top: 24;
-    margin-bottom: 24;
-    margin-start: 24;
-    margin-end: 24;
+    margin-start: 2;
+    margin-end: 2;
+    margin-top: 2;
+    margin-bottom: 2;
 
-    Button close_button {
-      label: "Close";
+    Stack main_stack {
+      transition-type: slide_left_right;
+
+      Box projects_page {
+        hexpand: true;
+        vexpand: true;
+        margin-start: 128;
+        margin-end: 128;
+        margin-top: 128;
+        margin-bottom: 128;
+
+        Stack projects_stack {
+          transition-type: crossfade;
+
+          Adw.StatusPage empty_state {
+            title: _("No Projects Yet");
+            description: _("Create a new project or add an existing one to get started.");
+          }
+
+          ScrolledWindow projects_scroller {
+            hexpand: true;
+            vexpand: true;
+            child: ListBox projects_list {
+              selection-mode: single;
+              vexpand: true;
+            };
+          }
+        }
+      }
+
+      Box dashboard_page {
+        hexpand: true;
+        vexpand: true;
+        spacing: 8;
+        orientation: vertical;
+        Label project_title {
+          xalign: 0.0;
+          wrap: true;
+          css-classes: [ "title-1" ];
+          label: _("Project");
+        }
+        Label project_path {
+          xalign: 0.0;
+          wrap: true;
+          css-classes: [ "dim-label" ];
+          label: "";
+        }
+      }
     }
   }
 }
-

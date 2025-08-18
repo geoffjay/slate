@@ -1,0 +1,7 @@
+---
+description: Provides guidance on common Meson build commands.
+alwaysApply: false
+---
+To build the project, use `meson setup builddir && ninja -C builddir`.
+To run tests, use `meson test -C builddir`.
+To install the project, use `meson install -C builddir`.

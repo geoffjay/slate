@@ -1,0 +1,21 @@
+using Gtk 4.0;
+
+Box project_dashboard {
+  hexpand: true;
+  vexpand: true;
+  spacing: 8;
+  orientation: vertical;
+  Label project_title_label {
+    xalign: 0.0;
+    wrap: true;
+    css-classes: [ "title-1" ];
+    label: _("Project");
+  }
+  Label project_path_label {
+    xalign: 0.0;
+    wrap: true;
+    css-classes: [ "dim-label" ];
+    label: "";
+  }
+}
+

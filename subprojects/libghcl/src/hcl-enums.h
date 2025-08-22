@@ -1,6 +1,6 @@
 /* hcl-enums.h - Enumerations for libghcl
  *
- * Copyright 2024 The Slate Project
+ * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

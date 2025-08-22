@@ -1,6 +1,6 @@
 /* slate-buildable.c
  *
- * Copyright 2024 Slate Contributors
+ * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,16 @@
  */
 
 #include "slate-buildable.h"
+#include <hcl.h>
 
 /**
  * SlateBuildable:
  *
- * A common interface for buildable objects that can be constructed from XML.
+ * A common interface for buildable objects that can be constructed from HCL.
  *
  * This interface provides the basic functionality needed for objects that
- * can be built from XML configuration. It includes methods for getting and
- * setting XML nodes, as well as building the object from an XML node.
+ * can be built from HCL configuration. It includes methods for getting and
+ * setting HCL blocks, as well as building the object from an HCL block.
  */
 
 G_DEFINE_INTERFACE (SlateBuildable, slate_buildable, G_TYPE_OBJECT)
@@ -38,132 +39,99 @@ slate_buildable_default_init (SlateBuildableInterface *iface)
 }
 
 /**
- * slate_buildable_get_xml:
+ * slate_buildable_get_hcl:
  * @self: a #SlateBuildable
  *
- * Gets the default XML representation for this buildable object.
+ * Gets the default HCL representation for this buildable object.
  *
- * Returns: (transfer none): the XML string representation
+ * Returns: (transfer none): the HCL string representation
  */
 const char *
-slate_buildable_get_xml (SlateBuildable *self)
+slate_buildable_get_hcl (SlateBuildable *self)
 {
   g_return_val_if_fail (SLATE_IS_BUILDABLE (self), NULL);
 
   SlateBuildableInterface *iface = SLATE_BUILDABLE_GET_IFACE (self);
 
-  if (iface->get_xml != NULL)
-    return iface->get_xml (self);
+  if (iface->get_hcl != NULL)
+    return iface->get_hcl (self);
 
-  return slate_buildable_get_xml_default ();
+  return slate_buildable_get_hcl_default ();
 }
 
 /**
- * slate_buildable_get_xsd:
+ * slate_buildable_get_block:
  * @self: a #SlateBuildable
  *
- * Gets the XSD schema for this buildable object.
+ * Gets the HCL block associated with this buildable object.
  *
- * Returns: (transfer none): the XSD schema string
+ * Returns: (transfer none) (nullable): the HCL block
  */
-const char *
-slate_buildable_get_xsd (SlateBuildable *self)
+HclBlock *
+slate_buildable_get_block (SlateBuildable *self)
 {
   g_return_val_if_fail (SLATE_IS_BUILDABLE (self), NULL);
 
   SlateBuildableInterface *iface = SLATE_BUILDABLE_GET_IFACE (self);
 
-  if (iface->get_xsd != NULL)
-    return iface->get_xsd (self);
-
-  return slate_buildable_get_xsd_default ();
-}
-
-/**
- * slate_buildable_get_node:
- * @self: a #SlateBuildable
- *
- * Gets the XML node associated with this buildable object.
- *
- * Returns: (transfer none) (nullable): the XML node
- */
-xmlNode *
-slate_buildable_get_node (SlateBuildable *self)
-{
-  g_return_val_if_fail (SLATE_IS_BUILDABLE (self), NULL);
-
-  SlateBuildableInterface *iface = SLATE_BUILDABLE_GET_IFACE (self);
-
-  if (iface->get_node != NULL)
-    return iface->get_node (self);
+  if (iface->get_block != NULL)
+    return iface->get_block (self);
 
   return NULL;
 }
 
 /**
- * slate_buildable_set_node:
+ * slate_buildable_set_block:
  * @self: a #SlateBuildable
- * @node: (nullable): the XML node to set
+ * @block: (nullable): the HCL block to set
  *
- * Sets the XML node for this buildable object.
+ * Sets the HCL block for this buildable object.
  */
 void
-slate_buildable_set_node (SlateBuildable *self,
-                           xmlNode        *node)
+slate_buildable_set_block (SlateBuildable *self,
+                            HclBlock       *block)
 {
   g_return_if_fail (SLATE_IS_BUILDABLE (self));
 
   SlateBuildableInterface *iface = SLATE_BUILDABLE_GET_IFACE (self);
 
-  if (iface->set_node != NULL)
-    iface->set_node (self, node);
+  if (iface->set_block != NULL)
+    iface->set_block (self, block);
 }
 
 /**
- * slate_buildable_build_from_xml_node:
+ * slate_buildable_build_from_hcl_block:
  * @self: a #SlateBuildable
- * @node: the XML node to build from
+ * @block: the HCL block to build from
  *
- * Builds the object using the provided XML node.
+ * Builds the object using the provided HCL block.
  */
 void
-slate_buildable_build_from_xml_node (SlateBuildable *self,
-                                      xmlNode        *node)
+slate_buildable_build_from_hcl_block (SlateBuildable *self,
+                                       HclBlock       *block)
 {
   g_return_if_fail (SLATE_IS_BUILDABLE (self));
-  g_return_if_fail (node != NULL);
+  g_return_if_fail (HCL_IS_BLOCK (block));
 
   SlateBuildableInterface *iface = SLATE_BUILDABLE_GET_IFACE (self);
 
-  if (iface->build_from_xml_node != NULL)
-    iface->build_from_xml_node (self, node);
+  if (iface->build_from_hcl_block != NULL)
+    iface->build_from_hcl_block (self, block);
 }
 
 /**
- * slate_buildable_get_xml_default:
+ * slate_buildable_get_hcl_default:
  *
- * Gets the default XML representation for buildable objects.
+ * Gets the default HCL representation for buildable objects.
  *
- * Returns: (transfer none): the default XML string
+ * Returns: (transfer none): the default HCL string
  */
 const char *
-slate_buildable_get_xml_default (void)
+slate_buildable_get_hcl_default (void)
 {
-  return "<object type=\"buildable\"/>";
+  return "object \"buildable\" {\n"
+         "  id = \"buildable0\"\n"
+         "}";
 }
 
-/**
- * slate_buildable_get_xsd_default:
- *
- * Gets the default XSD schema for buildable objects.
- *
- * Returns: (transfer none): the default XSD schema string
- */
-const char *
-slate_buildable_get_xsd_default (void)
-{
-  return "<xs:element name=\"object\">\n"
-         "  <xs:attribute name=\"id\" type=\"xs:string\" use=\"required\"/>\n"
-         "  <xs:attribute name=\"type\" type=\"xs:string\" use=\"required\"/>\n"
-         "</xs:element>";
-}
+

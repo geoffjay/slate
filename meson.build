@@ -86,5 +86,6 @@ lib_dependencies = [
 subdir('data')
 subdir('src')
 subdir('tests')
+subdir('examples')
 
 message('\n'.join(status))

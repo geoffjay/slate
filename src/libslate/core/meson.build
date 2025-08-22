@@ -1,9 +1,11 @@
 core_headers = [
   'slate-buildable.h',
+  'slate-config.h',
 ]
 
 core_sources = [
   'slate-buildable.c',
+  'slate-config.c',
 ]
 
 libslate_core_sources = files(core_sources)

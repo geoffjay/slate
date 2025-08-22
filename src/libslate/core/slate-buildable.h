@@ -1,6 +1,6 @@
 /* slate-buildable.h
  *
- * Copyright 2024 Slate Contributors
+ * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #pragma once
 
 #include <glib-object.h>
-#include <libxml/tree.h>
+#include <hcl.h>
 
 G_BEGIN_DECLS
 
@@ -29,35 +29,31 @@ G_DECLARE_INTERFACE (SlateBuildable, slate_buildable, SLATE, BUILDABLE, GObject)
 
 /**
  * SlateBuildableInterface:
- * @get_xml: Virtual function to get the default XML representation
- * @get_xsd: Virtual function to get the XSD schema
- * @get_node: Virtual function to get the XML node
- * @set_node: Virtual function to set the XML node
- * @build_from_xml_node: Virtual function to build the object from an XML node
+ * @get_hcl: Virtual function to get the default HCL representation
+ * @get_block: Virtual function to get the HCL block
+ * @set_block: Virtual function to set the HCL block
+ * @build_from_hcl_block: Virtual function to build the object from an HCL block
  *
- * Interface for buildable objects that can be constructed from XML.
+ * Interface for buildable objects that can be constructed from HCL configuration.
  */
 struct _SlateBuildableInterface
 {
   GTypeInterface parent_iface;
 
   /* Virtual methods */
-  const char * (*get_xml) (SlateBuildable *self);
-  const char * (*get_xsd) (SlateBuildable *self);
-  xmlNode *    (*get_node) (SlateBuildable *self);
-  void         (*set_node) (SlateBuildable *self, xmlNode *node);
-  void         (*build_from_xml_node) (SlateBuildable *self, xmlNode *node);
+  const char * (*get_hcl) (SlateBuildable *self);
+  HclBlock *   (*get_block) (SlateBuildable *self);
+  void         (*set_block) (SlateBuildable *self, HclBlock *block);
+  void         (*build_from_hcl_block) (SlateBuildable *self, HclBlock *block);
 };
 
 /* Interface methods */
-const char *slate_buildable_get_xml (SlateBuildable *self);
-const char *slate_buildable_get_xsd (SlateBuildable *self);
-xmlNode    *slate_buildable_get_node (SlateBuildable *self);
-void        slate_buildable_set_node (SlateBuildable *self, xmlNode *node);
-void        slate_buildable_build_from_xml_node (SlateBuildable *self, xmlNode *node);
+const char *slate_buildable_get_hcl (SlateBuildable *self);
+HclBlock   *slate_buildable_get_block (SlateBuildable *self);
+void        slate_buildable_set_block (SlateBuildable *self, HclBlock *block);
+void        slate_buildable_build_from_hcl_block (SlateBuildable *self, HclBlock *block);
 
 /* Default implementations */
-const char *slate_buildable_get_xml_default (void);
-const char *slate_buildable_get_xsd_default (void);
+const char *slate_buildable_get_hcl_default (void);
 
 G_END_DECLS

@@ -1,6 +1,6 @@
 /* test-buildable.c
  *
- * Copyright 2024 Slate Contributors
+ * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,13 +22,10 @@
 static void
 test_buildable_defaults (void)
 {
-  const char *xml = slate_buildable_get_xml_default ();
-  const char *xsd = slate_buildable_get_xsd_default ();
+  const char *hcl = slate_buildable_get_hcl_default ();
 
-  g_assert_nonnull (xml);
-  g_assert_nonnull (xsd);
-  g_assert_true (g_str_has_prefix (xml, "<object"));
-  g_assert_true (g_str_has_prefix (xsd, "<xs:element"));
+  g_assert_nonnull (hcl);
+  g_assert_true (g_str_has_prefix (hcl, "object"));
 }
 
 int

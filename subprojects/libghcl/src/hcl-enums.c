@@ -1,6 +1,6 @@
 /* hcl-enums.c - Enumerations implementation for libghcl
  *
- * Copyright 2024 The Slate Project
+ * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
  */
 
 #include "hcl-enums.h"

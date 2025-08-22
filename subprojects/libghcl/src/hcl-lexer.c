@@ -1,6 +1,6 @@
 /* hcl-lexer.c - HCL lexer implementation
  *
- * Copyright 2024 The Slate Project
+ * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
  */
 
 #include "hcl-lexer.h"

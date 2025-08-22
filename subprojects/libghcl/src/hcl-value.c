@@ -1,6 +1,6 @@
 /* hcl-value.c - HCL value implementation
  *
- * Copyright 2024 The Slate Project
+ * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
  */
 
 #include "hcl-value.h"

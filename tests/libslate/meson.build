@@ -18,6 +18,18 @@ test_buildable = executable(
 
 test('buildable', test_buildable, env: test_env)
 
+# Config tests
+test_config = executable(
+  'test-config',
+  ['test-config.c'],
+  dependencies: [libslate_deps],
+  link_with: [libslate],
+  c_args: test_cargs,
+  install: false,
+)
+
+test('config', test_config, env: test_env)
+
 # UI tests
 test_enums = executable(
   'test-enums',

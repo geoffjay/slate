@@ -1,6 +1,6 @@
 /* test-lexer.c - Tests for HclLexer
  *
- * Copyright 2024 The Slate Project
+ * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
  */
 
 #include <glib.h>

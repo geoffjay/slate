@@ -1,6 +1,6 @@
 /* test-document.c - Tests for HclDocument
  *
- * Copyright 2024 The Slate Project
+ * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
  */
 
 #include <glib.h>

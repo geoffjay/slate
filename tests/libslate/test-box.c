@@ -1,6 +1,6 @@
 /* test-box.c
  *
- * Copyright 2024 Slate Contributors
+ * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,17 +96,14 @@ test_box_buildable_interface (void)
   g_object_ref_sink (box);
   SlateBuildable *buildable = SLATE_BUILDABLE (box);
 
-  /* Test XML/XSD getters */
-  const char *xml = slate_buildable_get_xml (buildable);
-  const char *xsd = slate_buildable_get_xsd (buildable);
+  /* Test HCL getter */
+  const char *hcl = slate_buildable_get_hcl (buildable);
 
-  g_assert_nonnull (xml);
-  g_assert_nonnull (xsd);
-  g_assert_true (g_str_has_prefix (xml, "<object"));
-  g_assert_true (g_str_has_prefix (xsd, "<xs:element"));
+  g_assert_nonnull (hcl);
+  g_assert_true (g_str_has_prefix (hcl, "object"));
 
-  /* Test node getters/setters */
-  g_assert_null (slate_buildable_get_node (buildable));
+  /* Test block getters/setters */
+  g_assert_null (slate_buildable_get_block (buildable));
 
   g_object_unref (box);
 }

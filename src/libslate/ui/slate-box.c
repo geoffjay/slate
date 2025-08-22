@@ -1,6 +1,6 @@
 /* slate-box.c
  *
- * Copyright 2024 Slate Contributors
+ * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 
 #include "slate-box.h"
+#include <hcl.h>
 
 struct _SlateBox
 {
@@ -24,7 +25,7 @@ struct _SlateBox
 
   char *id;
   gboolean fill;
-  xmlNode *node;
+  HclBlock *block;
 };
 
 enum {
@@ -47,55 +48,90 @@ G_DEFINE_FINAL_TYPE_WITH_CODE (SlateBox, slate_box, GTK_TYPE_BOX,
 
 /* SlateBuildable interface implementation */
 static const char *
-slate_box_buildable_get_xml (SlateBuildable *buildable)
+slate_box_buildable_get_hcl (SlateBuildable *buildable)
 {
   (void)buildable;
-  return "<object id=\"box0\" type=\"box\"/>";
+  return "object \"box\" {\n"
+         "  id = \"box0\"\n"
+         "}";
 }
 
-static const char *
-slate_box_buildable_get_xsd (SlateBuildable *buildable)
-{
-  (void)buildable;
-  return "<xs:element name=\"object\">\n"
-         "  <xs:attribute name=\"id\" type=\"xs:string\" use=\"required\"/>\n"
-         "  <xs:attribute name=\"type\" type=\"xs:string\" use=\"required\"/>\n"
-         "</xs:element>";
-}
-
-static xmlNode *
-slate_box_buildable_get_node (SlateBuildable *buildable)
+static HclBlock *
+slate_box_buildable_get_block (SlateBuildable *buildable)
 {
   SlateBox *self = SLATE_BOX (buildable);
-  return self->node;
+  return self->block;
 }
 
 static void
-slate_box_buildable_set_node (SlateBuildable *buildable,
-                               xmlNode        *node)
+slate_box_buildable_set_block (SlateBuildable *buildable,
+                                HclBlock       *block)
 {
   SlateBox *self = SLATE_BOX (buildable);
-  self->node = node;
+
+  if (self->block != NULL)
+    g_object_unref (self->block);
+
+  self->block = block != NULL ? g_object_ref (block) : NULL;
 }
 
 static void
-slate_box_buildable_build_from_xml_node (SlateBuildable *buildable,
-                                          xmlNode        *node)
+slate_box_buildable_build_from_hcl_block (SlateBuildable *buildable,
+                                           HclBlock       *block)
 {
   SlateBox *self = SLATE_BOX (buildable);
+  HclValue *value;
 
-  /* For now, just store the node - XML building will be implemented later */
-  slate_box_buildable_set_node (buildable, node);
+  g_return_if_fail (HCL_IS_BLOCK (block));
+
+  /* Store the block */
+  slate_box_buildable_set_block (buildable, block);
+
+  /* Extract properties from the HCL block */
+  if (hcl_block_has_attribute (block, "id"))
+    {
+      value = hcl_block_get_attribute (block, "id");
+      if (hcl_value_is_string (value))
+        slate_box_set_id (self, hcl_value_get_string (value));
+    }
+
+  if (hcl_block_has_attribute (block, "orientation"))
+    {
+      value = hcl_block_get_attribute (block, "orientation");
+      if (hcl_value_is_string (value))
+        {
+          const char *orientation_str = hcl_value_get_string (value);
+          if (g_strcmp0 (orientation_str, "horizontal") == 0)
+            slate_box_set_slate_orientation (self, SLATE_ORIENTATION_HORIZONTAL);
+          else if (g_strcmp0 (orientation_str, "vertical") == 0)
+            slate_box_set_slate_orientation (self, SLATE_ORIENTATION_VERTICAL);
+        }
+    }
+
+  if (hcl_block_has_attribute (block, "homogeneous"))
+    {
+      value = hcl_block_get_attribute (block, "homogeneous");
+      if (hcl_value_is_bool (value))
+        slate_box_set_homogeneous (self, hcl_value_get_bool (value));
+    }
+
+  if (hcl_block_has_attribute (block, "spacing"))
+    {
+      value = hcl_block_get_attribute (block, "spacing");
+      if (hcl_value_is_number (value))
+        gtk_box_set_spacing (GTK_BOX (self), (int)hcl_value_get_int (value));
+    }
+
+  /* TODO: Handle nested blocks for child objects */
 }
 
 static void
 slate_buildable_iface_init (SlateBuildableInterface *iface)
 {
-  iface->get_xml = slate_box_buildable_get_xml;
-  iface->get_xsd = slate_box_buildable_get_xsd;
-  iface->get_node = slate_box_buildable_get_node;
-  iface->set_node = slate_box_buildable_set_node;
-  iface->build_from_xml_node = slate_box_buildable_build_from_xml_node;
+  iface->get_hcl = slate_box_buildable_get_hcl;
+  iface->get_block = slate_box_buildable_get_block;
+  iface->set_block = slate_box_buildable_set_block;
+  iface->build_from_hcl_block = slate_box_buildable_build_from_hcl_block;
 }
 
 /* SlateWidget interface implementation */
@@ -183,6 +219,7 @@ slate_box_finalize (GObject *object)
   SlateBox *self = SLATE_BOX (object);
 
   g_clear_pointer (&self->id, g_free);
+  g_clear_object (&self->block);
 
   G_OBJECT_CLASS (slate_box_parent_class)->finalize (object);
 }
@@ -247,7 +284,7 @@ slate_box_init (SlateBox *self)
 
   self->id = g_strdup ("box0");
   self->fill = TRUE;
-  self->node = NULL;
+  self->block = NULL;
 }
 
 /**

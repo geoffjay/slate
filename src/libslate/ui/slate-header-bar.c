@@ -201,15 +201,54 @@ slate_header_bar_constructed (GObject *object)
 }
 
 static void
+slate_header_bar_measure (GtkWidget      *widget,
+                           GtkOrientation  orientation,
+                           int             for_size,
+                           int            *minimum,
+                           int            *natural,
+                           int            *minimum_baseline,
+                           int            *natural_baseline)
+{
+  SlateHeaderBar *self = SLATE_HEADER_BAR (widget);
+
+  if (self->header_bar)
+    gtk_widget_measure (GTK_WIDGET (self->header_bar), orientation, for_size,
+                        minimum, natural, minimum_baseline, natural_baseline);
+  else
+    {
+      *minimum = 0;
+      *natural = 0;
+      if (minimum_baseline) *minimum_baseline = -1;
+      if (natural_baseline) *natural_baseline = -1;
+    }
+}
+
+static void
+slate_header_bar_size_allocate (GtkWidget *widget,
+                                 int        width,
+                                 int        height,
+                                 int        baseline)
+{
+  SlateHeaderBar *self = SLATE_HEADER_BAR (widget);
+
+  if (self->header_bar)
+    gtk_widget_allocate (GTK_WIDGET (self->header_bar), width, height, baseline, NULL);
+}
+
+static void
 slate_header_bar_class_init (SlateHeaderBarClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->dispose = slate_header_bar_dispose;
   object_class->finalize = slate_header_bar_finalize;
   object_class->get_property = slate_header_bar_get_property;
   object_class->set_property = slate_header_bar_set_property;
   object_class->constructed = slate_header_bar_constructed;
+
+  widget_class->measure = slate_header_bar_measure;
+  widget_class->size_allocate = slate_header_bar_size_allocate;
 
   /**
    * SlateHeaderBar:project-title:

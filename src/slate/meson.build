@@ -3,6 +3,7 @@ sources = [
   'preferences.vala',
   'db.vala',
   'ui.vala',
+  'settings.vala',
 ]
 
 vapi_files = [

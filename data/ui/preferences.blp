@@ -2,18 +2,40 @@ using Gtk 4.0;
 using Adw 1;
 
 Adw.PreferencesDialog preferences_dialog {
-  title: _("Settings");
+  title: _("Preferences");
 
   Adw.PreferencesPage general_page {
     title: _("General");
     icon-name: "emblem-system-symbolic";
 
-    Adw.PreferencesGroup {
+    Adw.PreferencesGroup project_group {
+      title: _("Projects");
+
+      Adw.SwitchRow auto_open_last_project_row {
+        title: _("Auto-open last project");
+        subtitle: _("Automatically open the last project on startup");
+      }
+
+      Adw.SpinRow recent_projects_limit_row {
+        title: _("Recent projects limit");
+        subtitle: _("Maximum number of recent projects to remember");
+
+        adjustment: Adjustment {
+          lower: 5;
+          upper: 50;
+          step-increment: 1;
+          page-increment: 5;
+          value: 10;
+        };
+      }
+    }
+
+    Adw.PreferencesGroup behavior_group {
       title: _("Behavior");
 
-      Adw.ActionRow {
-        title: _("Example option");
-        subtitle: _("Coming soon");
+      Adw.SwitchRow show_project_actions_row {
+        title: _("Show project actions");
+        subtitle: _("Display project action buttons in the header bar");
       }
     }
   }
@@ -22,14 +44,65 @@ Adw.PreferencesDialog preferences_dialog {
     title: _("Appearance");
     icon-name: "preferences-desktop-theme-symbolic";
 
-    Adw.PreferencesGroup {
-      title: _("Theme");
+    Adw.PreferencesGroup ui_group {
+      title: _("Interface");
 
-      Adw.ActionRow {
-        title: _("Theme selection");
-        subtitle: _("TBD");
+      Adw.ComboRow header_bar_style_row {
+        title: _("Header bar style");
+        subtitle: _("Choose the visual style of the header bar");
+
+        model: StringList {
+          strings [
+            _("Default"),
+            _("Compact"),
+            _("Expanded")
+            ,
+          ]
+        };
+      }
+    }
+  }
+
+  Adw.PreferencesPage plugins_page {
+    title: _("Plugins");
+    icon-name: "application-x-addon-symbolic";
+
+    Adw.PreferencesGroup plugins_group {
+      title: _("Plugin Management");
+
+      Adw.ActionRow plugins_info_row {
+        title: _("Plugin system");
+        subtitle: _("Plugin support will be available in a future release");
+      }
+    }
+  }
+
+  Adw.PreferencesPage advanced_page {
+    title: _("Advanced");
+    icon-name: "applications-debugging-symbolic";
+
+    Adw.PreferencesGroup debug_group {
+      title: _("Development");
+
+      Adw.SwitchRow show_debug_info_row {
+        title: _("Show debug information");
+        subtitle: _("Display debug information in the interface");
+      }
+
+      Adw.ComboRow log_level_row {
+        title: _("Log level");
+        subtitle: _("Minimum level of log messages to display");
+
+        model: StringList {
+          strings [
+            _("Error"),
+            _("Warning"),
+            _("Info"),
+            _("Debug")
+            ,
+          ]
+        };
       }
     }
   }
 }
-

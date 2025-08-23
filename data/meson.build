@@ -13,8 +13,8 @@ blueprints = custom_target(
     'batch-compile',
     '@OUTPUT@',
     '@CURRENT_SOURCE_DIR@/ui',
-    '@INPUT@'
-  ]
+    '@INPUT@',
+  ],
 )
 
 # Compile and embed resources, looking for compiled UI in the build dir
@@ -23,5 +23,8 @@ resources = gnome.compile_resources(
   'org.gnome.Slate.gresource.xml',
   source_dir: meson.current_build_dir(),
   c_name: 'slate',
-  dependencies: blueprints
+  dependencies: blueprints,
 )
+
+# Include gsettings
+subdir('gsettings')

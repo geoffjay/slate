@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="org.gnome.Slate">
+  <schema id="org.gnome.Slate" path="/org/gnome/Slate/">
+
+    <!-- Window State Settings -->
+    <key name="window-width" type="i">
+      <default>1024</default>
+      <summary>Default window width</summary>
+      <description>The default width of the main application window</description>
+    </key>
+
+    <key name="window-height" type="i">
+      <default>768</default>
+      <summary>Default window height</summary>
+      <description>The default height of the main application window</description>
+    </key>
+
+    <key name="window-maximized" type="b">
+      <default>false</default>
+      <summary>Window maximized state</summary>
+      <description>Whether the main window should start maximized</description>
+    </key>
+
+    <!-- Project Settings -->
+    <key name="last-project-path" type="s">
+      <default>""</default>
+      <summary>Last opened project path</summary>
+      <description>Path to the last project that was opened</description>
+    </key>
+
+    <key name="auto-open-last-project" type="b">
+      <default>false</default>
+      <summary>Automatically open last project</summary>
+      <description>Whether to automatically open the last project on startup</description>
+    </key>
+
+    <key name="recent-projects-limit" type="i">
+      <default>10</default>
+      <summary>Recent projects limit</summary>
+      <description>Maximum number of recent projects to remember</description>
+    </key>
+
+    <!-- UI Preferences -->
+    <key name="show-project-actions" type="b">
+      <default>true</default>
+      <summary>Show project action buttons</summary>
+      <description>Whether to show project action buttons in the header bar</description>
+    </key>
+
+    <key name="header-bar-style" type="s">
+      <choices>
+        <choice value="default"/>
+        <choice value="compact"/>
+        <choice value="expanded"/>
+      </choices>
+      <default>"default"</default>
+      <summary>Header bar style</summary>
+      <description>The visual style of the header bar</description>
+    </key>
+
+    <!-- Plugin Settings -->
+    <key name="enabled-plugins" type="as">
+      <default>[]</default>
+      <summary>Enabled plugins</summary>
+      <description>List of plugin IDs that are currently enabled</description>
+    </key>
+
+    <key name="plugin-search-paths" type="as">
+      <default>["/usr/lib/slate/plugins", "/usr/local/lib/slate/plugins"]</default>
+      <summary>Plugin search paths</summary>
+      <description>Directories to search for plugins</description>
+    </key>
+
+    <!-- Development Settings -->
+    <key name="show-debug-info" type="b">
+      <default>false</default>
+      <summary>Show debug information</summary>
+      <description>Whether to show debug information in the UI</description>
+    </key>
+
+    <key name="log-level" type="s">
+      <choices>
+        <choice value="error"/>
+        <choice value="warning"/>
+        <choice value="info"/>
+        <choice value="debug"/>
+      </choices>
+      <default>"warning"</default>
+      <summary>Log level</summary>
+      <description>The minimum level of log messages to display</description>
+    </key>
+
+  </schema>
+</schemalist>

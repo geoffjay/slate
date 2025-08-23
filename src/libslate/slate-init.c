@@ -39,5 +39,10 @@ slate_init (void)
   g_type_ensure (SLATE_TYPE_BOX);
   g_type_ensure (SLATE_TYPE_WIDGET);
 
+  /* Register plugin interfaces */
+  g_type_ensure (SLATE_TYPE_PLUGIN_INTERFACE);
+  g_type_ensure (SLATE_TYPE_HEADER_BAR_EXTENSION);
+  g_type_ensure (SLATE_TYPE_PLUGIN_MANAGER);
+
   initialized = TRUE;
 }

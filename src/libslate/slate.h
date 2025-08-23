@@ -34,6 +34,11 @@ G_BEGIN_DECLS
 #include "ui/slate-box.h"
 #include "ui/slate-header-bar.h"
 
+/* Plugin headers */
+#include "plugins/slate-plugin-interface.h"
+#include "plugins/slate-header-bar-extension.h"
+#include "plugins/slate-plugin-manager.h"
+
 /**
  * slate_init:
  *

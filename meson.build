@@ -80,6 +80,7 @@ lib_dependencies = [
   dependency('gio-2.0'),
   dependency('sqlite3'),
   dependency('gee-0.8'),
+  dependency('libpeas-2'),
   libghcl_dep,
 ]
 

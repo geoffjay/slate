@@ -55,6 +55,7 @@ typedef enum {
  * @HCL_TOKEN_TYPE_STRING: String literal
  * @HCL_TOKEN_TYPE_NUMBER: Number literal
  * @HCL_TOKEN_TYPE_BOOL: Boolean literal
+ * @HCL_TOKEN_TYPE_NULL: Null literal
  * @HCL_TOKEN_TYPE_ASSIGN: Assignment operator (=)
  * @HCL_TOKEN_TYPE_LBRACE: Left brace ({)
  * @HCL_TOKEN_TYPE_RBRACE: Right brace (})
@@ -63,6 +64,7 @@ typedef enum {
  * @HCL_TOKEN_TYPE_LPAREN: Left parenthesis (()
  * @HCL_TOKEN_TYPE_RPAREN: Right parenthesis ())
  * @HCL_TOKEN_TYPE_COMMA: Comma (,)
+ * @HCL_TOKEN_TYPE_DOT: Dot (.)
  * @HCL_TOKEN_TYPE_NEWLINE: Newline
  * @HCL_TOKEN_TYPE_COMMENT: Comment
  *
@@ -75,6 +77,7 @@ typedef enum {
   HCL_TOKEN_TYPE_STRING,
   HCL_TOKEN_TYPE_NUMBER,
   HCL_TOKEN_TYPE_BOOL,
+  HCL_TOKEN_TYPE_NULL,
   HCL_TOKEN_TYPE_ASSIGN,
   HCL_TOKEN_TYPE_LBRACE,
   HCL_TOKEN_TYPE_RBRACE,
@@ -83,6 +86,7 @@ typedef enum {
   HCL_TOKEN_TYPE_LPAREN,
   HCL_TOKEN_TYPE_RPAREN,
   HCL_TOKEN_TYPE_COMMA,
+  HCL_TOKEN_TYPE_DOT,
   HCL_TOKEN_TYPE_NEWLINE,
   HCL_TOKEN_TYPE_COMMENT
 } HclTokenType;
@@ -95,6 +99,8 @@ typedef enum {
  * @HCL_PARSER_ERROR_INVALID_ESCAPE: Invalid escape sequence
  * @HCL_PARSER_ERROR_UNTERMINATED_STRING: Unterminated string
  * @HCL_PARSER_ERROR_INVALID_NUMBER: Invalid number format
+ * @HCL_PARSER_ERROR_INVALID_CHARACTER: Invalid character
+ * @HCL_PARSER_ERROR_BUFFER_OVERFLOW: Buffer overflow
  *
  * Parser error codes.
  */
@@ -104,7 +110,9 @@ typedef enum {
   HCL_PARSER_ERROR_MISSING_VALUE,
   HCL_PARSER_ERROR_INVALID_ESCAPE,
   HCL_PARSER_ERROR_UNTERMINATED_STRING,
-  HCL_PARSER_ERROR_INVALID_NUMBER
+  HCL_PARSER_ERROR_INVALID_NUMBER,
+  HCL_PARSER_ERROR_INVALID_CHARACTER,
+  HCL_PARSER_ERROR_BUFFER_OVERFLOW
 } HclParserError;
 
 #define HCL_PARSER_ERROR hcl_parser_error_quark()

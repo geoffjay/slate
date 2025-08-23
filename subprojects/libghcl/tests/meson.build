@@ -5,6 +5,7 @@ test_sources = [
   'test-block.c',
   'test-document.c',
   'test-lexer.c',
+  'test-lexer-enhanced.c',
   'test-parser.c',
 ]
 

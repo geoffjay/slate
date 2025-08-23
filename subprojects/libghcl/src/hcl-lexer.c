@@ -329,15 +329,79 @@ hcl_lexer_read_number (HclLexer *lexer)
   gsize start_line = lexer->line;
   gsize start_column = lexer->column;
   GString *value = g_string_new (NULL);
+  gboolean is_hex = FALSE;
+  gboolean is_binary = FALSE;
+  gboolean has_dot = FALSE;
+  gboolean has_exp = FALSE;
+
+  gchar first_char = hcl_lexer_current_char (lexer);
+
+  /* Handle negative numbers */
+  if (first_char == '-') {
+    g_string_append_c (value, first_char);
+    hcl_lexer_advance (lexer);
+    first_char = hcl_lexer_current_char (lexer);
+  }
+
+  /* Check for hex (0x) or binary (0b) prefixes */
+  if (first_char == '0' && lexer->position + 1 < lexer->input_length) {
+    gchar second_char = hcl_lexer_peek_char (lexer, 1);
+    if (second_char == 'x' || second_char == 'X') {
+      is_hex = TRUE;
+      g_string_append_c (value, first_char);
+      hcl_lexer_advance (lexer);
+      g_string_append_c (value, hcl_lexer_current_char (lexer));
+      hcl_lexer_advance (lexer);
+    } else if (second_char == 'b' || second_char == 'B') {
+      is_binary = TRUE;
+      g_string_append_c (value, first_char);
+      hcl_lexer_advance (lexer);
+      g_string_append_c (value, hcl_lexer_current_char (lexer));
+      hcl_lexer_advance (lexer);
+    }
+  }
 
   while (lexer->position < lexer->input_length) {
     gchar c = hcl_lexer_current_char (lexer);
-    if (isdigit (c) || c == '.' || c == '-' || c == '+' ||
-        c == 'e' || c == 'E') {
-      g_string_append_c (value, c);
-      hcl_lexer_advance (lexer);
+
+    if (is_hex) {
+      if (isxdigit (c)) {
+        g_string_append_c (value, c);
+        hcl_lexer_advance (lexer);
+      } else {
+        break;
+      }
+    } else if (is_binary) {
+      if (c == '0' || c == '1') {
+        g_string_append_c (value, c);
+        hcl_lexer_advance (lexer);
+      } else {
+        break;
+      }
     } else {
-      break;
+      /* Decimal number */
+      if (isdigit (c)) {
+        g_string_append_c (value, c);
+        hcl_lexer_advance (lexer);
+      } else if (c == '.' && !has_dot && !has_exp) {
+        has_dot = TRUE;
+        g_string_append_c (value, c);
+        hcl_lexer_advance (lexer);
+      } else if ((c == 'e' || c == 'E') && !has_exp) {
+        has_exp = TRUE;
+        g_string_append_c (value, c);
+        hcl_lexer_advance (lexer);
+        /* Handle optional +/- after exponent */
+        if (lexer->position < lexer->input_length) {
+          gchar exp_sign = hcl_lexer_current_char (lexer);
+          if (exp_sign == '+' || exp_sign == '-') {
+            g_string_append_c (value, exp_sign);
+            hcl_lexer_advance (lexer);
+          }
+        }
+      } else {
+        break;
+      }
     }
   }
 
@@ -369,6 +433,10 @@ hcl_lexer_read_identifier (HclLexer *lexer)
   /* Check for boolean literals */
   if (g_strcmp0 (value->str, "true") == 0 || g_strcmp0 (value->str, "false") == 0) {
     type = HCL_TOKEN_TYPE_BOOL;
+  }
+  /* Check for null literal */
+  else if (g_strcmp0 (value->str, "null") == 0) {
+    type = HCL_TOKEN_TYPE_NULL;
   }
 
   HclToken *token = hcl_token_new (type, value->str, start_line, start_column);
@@ -474,6 +542,10 @@ hcl_lexer_next_token (HclLexer *lexer, GError **error)
     case ',':
       hcl_lexer_advance (lexer);
       return hcl_token_new (HCL_TOKEN_TYPE_COMMA, ",", line, column);
+
+    case '.':
+      hcl_lexer_advance (lexer);
+      return hcl_token_new (HCL_TOKEN_TYPE_DOT, ".", line, column);
 
     case '"':
     case '\'':

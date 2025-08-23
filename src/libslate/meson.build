@@ -18,11 +18,13 @@ libslate_deps = [
   dependency('gtk4', version: '>= 4.0.0'),
   dependency('libadwaita-1', version: '>= 1.0.0'),
   dependency('gio-2.0', version: '>= 2.70.0'),
+  dependency('libpeas-2'),
   libghcl_dep,
 ]
 
 subdir('core')
 subdir('ui')
+subdir('plugins')
 
 sources = libslate_sources + libslate_headers + libslate_generated_sources + libslate_generated_headers
 

@@ -32,5 +32,6 @@ G_BEGIN_DECLS
 #include "ui/slate-widget.h"
 #include "ui/slate-utility.h"
 #include "ui/slate-box.h"
+#include "ui/slate-header-bar.h"
 
 G_END_DECLS

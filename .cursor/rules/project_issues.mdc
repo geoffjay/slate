@@ -1,0 +1,533 @@
+---
+alwaysApply: false
+---
+
+# Slate Project Issue Management
+
+This rule provides context for managing the Slate project's development workflow, including reviewing completed work, tracking progress, and planning next steps.
+
+## Project Overview
+
+Slate is a desktop application framework built with GTK4/Libadwaita and Vala, designed to be extensible through plugins and configurable via HCL files. The project follows a structured development approach with comprehensive planning and issue tracking.
+
+## Key Project Resources
+
+### Planning Documents
+
+- `docs/CONCEPT.md` - Original high-level concept and requirements
+- `docs/PLANNING.md` - Main planning overview with architecture and timeline
+- `docs/PLANNING_REVIEW.md` - Review of all planning materials
+- `docs/spec/` - Detailed specification documents by functional area
+- `docs/plan/` - Work breakdown and implementation planning documents
+
+### Issue Management
+
+- GitHub Issues: https://github.com/geoffjay/slate/issues
+- GitHub Project Board: https://github.com/users/geoffjay/projects/3
+- Milestones: Organized by development phases (Foundation, Enhancement, etc.)
+
+## Reviewing Work Done So Far
+
+### 1. Check Completed Issues
+
+```bash
+# List completed issues
+gh issue list --state closed --limit 20
+
+# Get details of specific completed issue
+gh issue view <issue_number>
+
+# Check project board status
+gh project view 3 --owner geoffjay
+```
+
+### 2. Review Recent Development
+
+```bash
+# Check recent commits
+git log --oneline -10
+
+# Review build status
+cd builddir && ninja
+
+# Check current application state
+./src/slate/slate
+```
+
+### 3. Foundation Assessment
+
+Key completed components:
+
+- **Build System**: Meson with all dependencies (GTK4, Libadwaita, SQLite, etc.)
+- **Application Framework**: Adw.Application with lifecycle management
+- **Database System**: SQLite with migration framework
+- **Project Management**: Complete CRUD operations and UI
+- **UI Components**: SlateHeaderBar, MainWindowController, project dialogs
+- **Resource System**: GResource integration for UI files
+
+## Getting Information About Work in Progress
+
+### 1. Check Current Issue Status
+
+```bash
+# List open issues by status
+gh issue list --state open --label "status:in-progress"
+
+# Check project board for in-progress items
+gh project item-list 3 --owner geoffjay --format json | jq '.items[] | select(.fieldValues.Status == "In progress")'
+```
+
+### 2. Review Current Branch State
+
+```bash
+# Check current branch and uncommitted changes
+git status
+git diff
+
+# Check for any build issues
+cd builddir && ninja 2>&1 | grep -i error
+```
+
+### 3. Active Development Areas
+
+Current focus areas based on enhancement plan:
+
+- **UI Enhancement**: Header bar, sidebar, status bar components
+- **Settings System**: GSettings integration and preferences
+- **Plugin Foundation**: libpeas integration preparation
+- **Configuration System**: HCL parsing enhancement
+
+## Determining Remaining Work
+
+### 1. Check Project Board Backlog
+
+```bash
+# List backlog items
+gh project item-list 3 --owner geoffjay --format json | jq '.items[] | select(.fieldValues.Status == "Backlog") | .content.title'
+
+# List ready items (next to work on)
+gh project item-list 3 --owner geoffjay --format json | jq '.items[] | select(.fieldValues.Status == "Ready") | .content.title'
+```
+
+### 2. Review Enhancement Phase Plan
+
+Reference Issue #31 "Enhancement Phase Plan: Next Development Priorities" for:
+
+- **Phase 1**: UI Enhancement (Week 1-2)
+- **Phase 2**: Settings System (Week 2-3)
+- **Phase 3**: Plugin System Foundation (Week 3-4)
+- **Phase 4**: Configuration System (Week 4-5)
+- **Phase 5**: Dashboard Framework (Week 5-6)
+
+### 3. Check Specification Gaps
+
+Compare current implementation against specifications in `docs/spec/`:
+
+- Core application architecture
+- User interface components
+- Configuration system requirements
+- Plugin system design
+- Dashboard system features
+
+## Looking at Project Dependencies
+
+### 1. Build Dependencies
+
+```bash
+# Check meson dependencies
+meson introspect builddir --dependencies
+
+# Verify all dependencies are found
+cd builddir && meson configure | grep -E "(gtk4|libadwaita|sqlite|gee)"
+```
+
+### 2. Current Dependencies
+
+- **GTK4**: 4.18.6+ (UI framework)
+- **Libadwaita**: 1.7.6+ (modern GNOME UI)
+- **GIO**: 2.84.4+ (async I/O and settings)
+- **SQLite3**: 3.43.2+ (database)
+- **Gee**: 0.20.8+ (collections library)
+- **libghcl**: Custom subproject (HCL parsing)
+
+### 3. Planned Dependencies
+
+- **libpeas**: For plugin system (not yet added)
+- **GtkSourceView**: For configuration editor (future)
+- **Additional dependencies**: Based on plugin requirements
+
+## Updating Issue Status and Information
+
+### 1. Update Issue Status
+
+```bash
+# Mark issue as in progress
+gh issue edit <issue_number> --add-label "status:in-progress"
+
+# Mark issue as completed
+gh issue edit <issue_number> --add-label "status:completed" --remove-label "status:in-progress"
+gh issue close <issue_number>
+
+# Add milestone to issue
+gh issue edit <issue_number> --milestone "Milestone 1: Foundation"
+```
+
+### 2. Update Project Board
+
+```bash
+# Move item to different status
+gh project item-edit --project-id PVT_kwHOAAMmEs4BBOlQ --id <item_id> --field-id <status_field_id> --single-select-option-id <option_id>
+
+# Common status option IDs:
+# Backlog: 47fc9ee4
+# Ready: f75ad846
+# In progress: 98236657
+# In review: 47fc9ee4
+# Done: 98236657
+```
+
+### 3. Create New Issues
+
+```bash
+# Create new issue with proper labels
+gh issue create \
+  --title "Task: Implement GSettings Schema" \
+  --body "Implementation details..." \
+  --label "type:task,component:core,priority:high" \
+  --milestone "Milestone 2: Enhancement"
+
+# Add to project board
+gh project item-add PVT_kwHOAAMmEs4BBOlQ --issue <issue_number>
+```
+
+## Development Workflow
+
+### 1. Starting New Work
+
+1. Check project board for "Ready" items
+2. Move item to "In progress"
+3. Create feature branch if needed
+4. Update local TODO tracking
+
+### 2. Completing Work
+
+1. Test implementation thoroughly
+2. Update documentation if needed
+3. Mark issue as completed
+4. Move project board item to "Done"
+5. Create follow-up issues if needed
+
+### 3. Planning Next Phase
+
+1. Review completed work against specifications
+2. Identify gaps and remaining requirements
+3. Create new issues for next phase
+4. Update project board priorities
+5. Adjust timeline estimates based on progress
+
+## Common Commands Reference
+
+```bash
+# Project status overview
+gh project view 3 --owner geoffjay
+
+# List issues by component
+gh issue list --label "component:ui"
+gh issue list --label "component:core"
+gh issue list --label "component:plugin"
+
+# Check build and test status
+cd builddir && ninja && ninja test
+
+# Review recent planning documents
+ls -la docs/plan/ docs/spec/
+
+# Check current application functionality
+./builddir/src/slate/slate
+```
+
+## Quality Assurance
+
+### Before Marking Work Complete
+
+- [ ] Code compiles without warnings
+- [ ] Application runs without crashes
+- [ ] New features work as specified
+- [ ] No regressions in existing functionality
+- [ ] Documentation updated if needed
+- [ ] Tests pass (when available)
+
+### Project Health Indicators
+
+- Build status: Clean compilation
+- Issue velocity: Steady progress through backlog
+- Code quality: Following GNOME/GTK guidelines
+- Architecture: Maintaining plugin extensibility
+- Documentation: Keeping planning docs current
+
+This rule provides the context needed to effectively manage the Slate project's development workflow and maintain clear visibility into progress and next steps.
+
+# Slate Project Issue Management
+
+This rule provides context for managing the Slate project's development workflow, including reviewing completed work, tracking progress, and planning next steps.
+
+## Project Overview
+
+Slate is a desktop application framework built with GTK4/Libadwaita and Vala, designed to be extensible through plugins and configurable via HCL files. The project follows a structured development approach with comprehensive planning and issue tracking.
+
+## Key Project Resources
+
+### Planning Documents
+
+- `docs/CONCEPT.md` - Original high-level concept and requirements
+- `docs/PLANNING.md` - Main planning overview with architecture and timeline
+- `docs/PLANNING_REVIEW.md` - Review of all planning materials
+- `docs/spec/` - Detailed specification documents by functional area
+- `docs/plan/` - Work breakdown and implementation planning documents
+
+### Issue Management
+
+- GitHub Issues: https://github.com/geoffjay/slate/issues
+- GitHub Project Board: https://github.com/users/geoffjay/projects/3
+- Milestones: Organized by development phases (Foundation, Enhancement, etc.)
+
+## Reviewing Work Done So Far
+
+### 1. Check Completed Issues
+
+```bash
+# List completed issues
+gh issue list --state closed --limit 20
+
+# Get details of specific completed issue
+gh issue view <issue_number>
+
+# Check project board status
+gh project view 3 --owner geoffjay
+```
+
+### 2. Review Recent Development
+
+```bash
+# Check recent commits
+git log --oneline -10
+
+# Review build status
+cd builddir && ninja
+
+# Check current application state
+./src/slate/slate
+```
+
+### 3. Foundation Assessment
+
+Key completed components:
+
+- **Build System**: Meson with all dependencies (GTK4, Libadwaita, SQLite, etc.)
+- **Application Framework**: Adw.Application with lifecycle management
+- **Database System**: SQLite with migration framework
+- **Project Management**: Complete CRUD operations and UI
+- **UI Components**: SlateHeaderBar, MainWindowController, project dialogs
+- **Resource System**: GResource integration for UI files
+
+## Getting Information About Work in Progress
+
+### 1. Check Current Issue Status
+
+```bash
+# List open issues by status
+gh issue list --state open --label "status:in-progress"
+
+# Check project board for in-progress items
+gh project item-list 3 --owner geoffjay --format json | jq '.items[] | select(.fieldValues.Status == "In progress")'
+```
+
+### 2. Review Current Branch State
+
+```bash
+# Check current branch and uncommitted changes
+git status
+git diff
+
+# Check for any build issues
+cd builddir && ninja 2>&1 | grep -i error
+```
+
+### 3. Active Development Areas
+
+Current focus areas based on enhancement plan:
+
+- **UI Enhancement**: Header bar, sidebar, status bar components
+- **Settings System**: GSettings integration and preferences
+- **Plugin Foundation**: libpeas integration preparation
+- **Configuration System**: HCL parsing enhancement
+
+## Determining Remaining Work
+
+### 1. Check Project Board Backlog
+
+```bash
+# List backlog items
+gh project item-list 3 --owner geoffjay --format json | jq '.items[] | select(.fieldValues.Status == "Backlog") | .content.title'
+
+# List ready items (next to work on)
+gh project item-list 3 --owner geoffjay --format json | jq '.items[] | select(.fieldValues.Status == "Ready") | .content.title'
+```
+
+### 2. Review Enhancement Phase Plan
+
+Reference Issue #31 "Enhancement Phase Plan: Next Development Priorities" for:
+
+- **Phase 1**: UI Enhancement (Week 1-2)
+- **Phase 2**: Settings System (Week 2-3)
+- **Phase 3**: Plugin System Foundation (Week 3-4)
+- **Phase 4**: Configuration System (Week 4-5)
+- **Phase 5**: Dashboard Framework (Week 5-6)
+
+### 3. Check Specification Gaps
+
+Compare current implementation against specifications in `docs/spec/`:
+
+- Core application architecture
+- User interface components
+- Configuration system requirements
+- Plugin system design
+- Dashboard system features
+
+## Looking at Project Dependencies
+
+### 1. Build Dependencies
+
+```bash
+# Check meson dependencies
+meson introspect builddir --dependencies
+
+# Verify all dependencies are found
+cd builddir && meson configure | grep -E "(gtk4|libadwaita|sqlite|gee)"
+```
+
+### 2. Current Dependencies
+
+- **GTK4**: 4.18.6+ (UI framework)
+- **Libadwaita**: 1.7.6+ (modern GNOME UI)
+- **GIO**: 2.84.4+ (async I/O and settings)
+- **SQLite3**: 3.43.2+ (database)
+- **Gee**: 0.20.8+ (collections library)
+- **libghcl**: Custom subproject (HCL parsing)
+
+### 3. Planned Dependencies
+
+- **libpeas**: For plugin system (not yet added)
+- **GtkSourceView**: For configuration editor (future)
+- **Additional dependencies**: Based on plugin requirements
+
+## Updating Issue Status and Information
+
+### 1. Update Issue Status
+
+```bash
+# Mark issue as in progress
+gh issue edit <issue_number> --add-label "status:in-progress"
+
+# Mark issue as completed
+gh issue edit <issue_number> --add-label "status:completed" --remove-label "status:in-progress"
+gh issue close <issue_number>
+
+# Add milestone to issue
+gh issue edit <issue_number> --milestone "Milestone 1: Foundation"
+```
+
+### 2. Update Project Board
+
+```bash
+# Move item to different status
+gh project item-edit --project-id PVT_kwHOAAMmEs4BBOlQ --id <item_id> --field-id <status_field_id> --single-select-option-id <option_id>
+
+# Common status option IDs:
+# Backlog: 47fc9ee4
+# Ready: f75ad846
+# In progress: 98236657
+# In review: 47fc9ee4
+# Done: 98236657
+```
+
+### 3. Create New Issues
+
+```bash
+# Create new issue with proper labels
+gh issue create \
+  --title "Task: Implement GSettings Schema" \
+  --body "Implementation details..." \
+  --label "type:task,component:core,priority:high" \
+  --milestone "Milestone 2: Enhancement"
+
+# Add to project board
+gh project item-add PVT_kwHOAAMmEs4BBOlQ --issue <issue_number>
+```
+
+## Development Workflow
+
+### 1. Starting New Work
+
+1. Check project board for "Ready" items
+2. Move item to "In progress"
+3. Create feature branch if needed
+4. Update local TODO tracking
+
+### 2. Completing Work
+
+1. Test implementation thoroughly
+2. Update documentation if needed
+3. Mark issue as completed
+4. Move project board item to "Done"
+5. Create follow-up issues if needed
+
+### 3. Planning Next Phase
+
+1. Review completed work against specifications
+2. Identify gaps and remaining requirements
+3. Create new issues for next phase
+4. Update project board priorities
+5. Adjust timeline estimates based on progress
+
+## Common Commands Reference
+
+```bash
+# Project status overview
+gh project view 3 --owner geoffjay
+
+# List issues by component
+gh issue list --label "component:ui"
+gh issue list --label "component:core"
+gh issue list --label "component:plugin"
+
+# Check build and test status
+cd builddir && ninja && ninja test
+
+# Review recent planning documents
+ls -la docs/plan/ docs/spec/
+
+# Check current application functionality
+./builddir/src/slate/slate
+```
+
+## Quality Assurance
+
+### Before Marking Work Complete
+
+- [ ] Code compiles without warnings
+- [ ] Application runs without crashes
+- [ ] New features work as specified
+- [ ] No regressions in existing functionality
+- [ ] Documentation updated if needed
+- [ ] Tests pass (when available)
+
+### Project Health Indicators
+
+- Build status: Clean compilation
+- Issue velocity: Steady progress through backlog
+- Code quality: Following GNOME/GTK guidelines
+- Architecture: Maintaining plugin extensibility
+- Documentation: Keeping planning docs current
+
+This rule provides the context needed to effectively manage the Slate project's development workflow and maintain clear visibility into progress and next steps.

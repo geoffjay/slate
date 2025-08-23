@@ -151,7 +151,7 @@ public class ProjectDialogs : Object {
     }
 
     public static void prompt_for_name(Gtk.Window transient_for, string default_name, owned NameCallback on_done) {
-        var dialog = new Adw.MessageDialog(transient_for, "Project Name", "Enter a name for your project");
+        var dialog = new Adw.AlertDialog("Project Name", "Enter a name for your project");
         var entry = new Gtk.Entry();
         entry.set_text(default_name);
         dialog.set_extra_child(entry);
@@ -167,7 +167,7 @@ public class ProjectDialogs : Object {
             }
             on_done(result);
         });
-        dialog.present();
+        dialog.present(transient_for);
     }
 }
 

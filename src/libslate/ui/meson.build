@@ -42,6 +42,7 @@ ui_headers = [
   'slate-widget.h',
   'slate-utility.h',
   'slate-box.h',
+  'slate-header-bar.h',
 ]
 
 ui_sources = [
@@ -49,6 +50,7 @@ ui_sources = [
   'slate-widget.c',
   'slate-utility.c',
   'slate-box.c',
+  'slate-header-bar.c',
 ]
 
 libslate_generated_sources += [ui_resources[0]]

@@ -19,10 +19,8 @@ public class SlateDb : Object {
 
     private SlateDb() {
         var data_dir = Path.build_filename(Environment.get_user_data_dir(), "org.gnome.Slate");
-        try {
-            DirUtils.create_with_parents(data_dir, 493);
-        } catch (Error e) {
-            warning("Failed creating data dir: %s", e.message);
+        if (DirUtils.create_with_parents(data_dir, 493) != 0) {
+            warning("Failed creating data dir: %s", data_dir);
         }
         database_path = Path.build_filename(data_dir, "slate.db");
     }
@@ -148,12 +146,17 @@ public class Project : Object {
     private static int64 last_insert_rowid() {
         // Access underlying handle via a quick SELECT last_insert_rowid();
         var db = SlateDb.get_default();
-        var stmt = db.prepare("SELECT last_insert_rowid();");
-        int64 id = 0;
-        if (stmt.step() == Sqlite.ROW) {
-            id = stmt.column_int64(0);
+        try {
+            var stmt = db.prepare("SELECT last_insert_rowid();");
+            int64 id = 0;
+            if (stmt.step() == Sqlite.ROW) {
+                id = stmt.column_int64(0);
+            }
+            return id;
+        } catch (Error e) {
+            warning("Failed to get last insert rowid: %s", e.message);
+            return 0;
         }
-        return id;
     }
 }
 

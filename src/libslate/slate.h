@@ -33,6 +33,9 @@ G_BEGIN_DECLS
 #include "ui/slate-utility.h"
 #include "ui/slate-box.h"
 #include "ui/slate-header-bar.h"
+#include "ui/slate-dashboard.h"
+#include "ui/slate-chart.h"
+#include "ui/slate-dashboard-card.h"
 
 /* Plugin headers */
 #include "plugins/slate-plugin-interface.h"

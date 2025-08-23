@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="SlateDashboard" parent="AdwBin">
+    <property name="css-classes">slate-dashboard</property>
+  </template>
+</interface>

@@ -43,6 +43,9 @@ ui_headers = [
   'slate-utility.h',
   'slate-box.h',
   'slate-header-bar.h',
+  'slate-dashboard.h',
+  'slate-chart.h',
+  'slate-dashboard-card.h',
 ]
 
 ui_sources = [
@@ -51,6 +54,9 @@ ui_sources = [
   'slate-utility.c',
   'slate-box.c',
   'slate-header-bar.c',
+  'slate-dashboard.c',
+  'slate-chart.c',
+  'slate-dashboard-card.c',
 ]
 
 libslate_generated_sources += [ui_resources[0]]

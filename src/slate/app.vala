@@ -2,6 +2,9 @@ using Adw;
 using GLib;
 using Gtk;
 
+[CCode (cheader_filename = "slate.h")]
+extern void slate_init ();
+
 public class Application {
     private static async void create_project_flow(Adw.Application app, MainWindowController controller) {
         var win = app.get_active_window();
@@ -41,6 +44,7 @@ public class Application {
     }
     public static int main(string[] argv) {
         Adw.init();
+        slate_init();
 
         var app = new Adw.Application("org.gnome.Slate", ApplicationFlags.DEFAULT_FLAGS);
 

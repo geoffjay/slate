@@ -17,9 +17,7 @@ public class MainWindowController : Object {
     private Gtk.Widget projects_page;
     private Gtk.Widget dashboard_page;
     private Gtk.Widget projects_scroller;
-    private Gtk.Button close_project_button;
-    private Gtk.Box project_actions_box;
-    private Adw.WindowTitle window_title;
+    private Slate.HeaderBar slate_header_bar;
 
     public MainWindowController(Gtk.Application app) {
         this.app = app;
@@ -38,9 +36,10 @@ public class MainWindowController : Object {
         projects_page = (Gtk.Widget) builder.get_object("projects_page");
         dashboard_page = (Gtk.Widget) builder.get_object("dashboard_page");
         projects_scroller = (Gtk.Widget) builder.get_object("projects_scroller");
-        close_project_button = (Gtk.Button) builder.get_object("close_project_button");
-        project_actions_box = (Gtk.Box) builder.get_object("project_actions_box");
-        window_title = (Adw.WindowTitle) builder.get_object("window_title");
+        slate_header_bar = (Slate.HeaderBar) builder.get_object("slate_header_bar");
+
+        // Set up project action buttons
+        setup_header_bar_actions();
 
         projects_list.row_activated.connect((row) => {
             var item = row as ProjectRow;
@@ -50,6 +49,26 @@ public class MainWindowController : Object {
         });
 
         refresh_projects();
+    }
+
+    private void setup_header_bar_actions() {
+        // Create project action buttons
+        var create_button = new Gtk.Button.from_icon_name("list-add-symbolic");
+        create_button.set_tooltip_text(_("Create Project"));
+        create_button.set_action_name("app.create-project");
+
+        var add_button = new Gtk.Button.from_icon_name("document-open-symbolic");
+        add_button.set_tooltip_text(_("Add Existing Project"));
+        add_button.set_action_name("app.add-project");
+
+        // Add buttons to header bar
+        slate_header_bar.add_end_widget(create_button);
+        slate_header_bar.add_end_widget(add_button);
+
+        // Connect to close project signal
+        slate_header_bar.close_project_requested.connect(() => {
+            show_projects();
+        });
     }
 
     public void present() {
@@ -85,31 +104,19 @@ public class MainWindowController : Object {
         project_title.set_label(project.name);
         project_path.set_label(project.path);
 
-        // Update header bar for project view (with null checks)
-        if (window_title != null) {
-            window_title.set_title(project.name);
-        }
-        if (close_project_button != null) {
-            close_project_button.set_visible(true);
-        }
-        if (project_actions_box != null) {
-            project_actions_box.set_visible(false);
-        }
+        // Update header bar for project view
+        slate_header_bar.set_project_title(project.name);
+        slate_header_bar.set_project_subtitle(project.path);
+        slate_header_bar.set_show_project_actions(true);
 
         main_stack.set_visible_child(dashboard_page);
     }
 
     public void show_projects() {
-        // Update header bar for projects view (with null checks)
-        if (window_title != null) {
-            window_title.set_title("Slate");
-        }
-        if (close_project_button != null) {
-            close_project_button.set_visible(false);
-        }
-        if (project_actions_box != null) {
-            project_actions_box.set_visible(true);
-        }
+        // Update header bar for projects view
+        slate_header_bar.set_project_title("Slate");
+        slate_header_bar.set_project_subtitle(null);
+        slate_header_bar.set_show_project_actions(false);
 
         main_stack.set_visible_child(projects_page);
     }

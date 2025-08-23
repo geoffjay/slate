@@ -1,6 +1,6 @@
-/* slate.h
+/* slate-init.c
  *
- * Copyright 2024 Geoff Johnson <geoff.jay@gmail.com>
+ * Copyright 2025 Slate Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,25 +14,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#pragma once
-
-#include <glib.h>
-#include <gtk/gtk.h>
-
-G_BEGIN_DECLS
-
-/* Core headers */
-#include "core/slate-buildable.h"
-#include "core/slate-config.h"
-
-/* UI headers */
-#include "ui/slate-enums.h"
-#include "ui/slate-widget.h"
-#include "ui/slate-utility.h"
-#include "ui/slate-box.h"
-#include "ui/slate-header-bar.h"
+#include "slate.h"
 
 /**
  * slate_init:
@@ -40,6 +26,18 @@ G_BEGIN_DECLS
  * Initializes the Slate library and registers all custom types.
  * This should be called before using any Slate widgets in Blueprint files.
  */
-void slate_init (void);
+void
+slate_init (void)
+{
+  static gboolean initialized = FALSE;
 
-G_END_DECLS
+  if (initialized)
+    return;
+
+  /* Ensure all our custom types are registered */
+  g_type_ensure (SLATE_TYPE_HEADER_BAR);
+  g_type_ensure (SLATE_TYPE_BOX);
+  g_type_ensure (SLATE_TYPE_WIDGET);
+
+  initialized = TRUE;
+}

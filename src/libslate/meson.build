@@ -3,7 +3,7 @@ libslate_header_dir = get_option('includedir') + '/libslate'
 
 libslate_generated_sources = []
 libslate_generated_headers = []
-libslate_sources = []
+libslate_sources = files('slate-init.c')
 libslate_headers = files('slate.h')
 
 libslate_reqs = [

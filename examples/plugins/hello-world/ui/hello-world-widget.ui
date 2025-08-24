@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="HelloWorldWidget" parent="SlateDashboardCard">
+    <property name="title">Hello World Widget</property>
+    <property name="subtitle">Example plugin widget</property>
+  </template>
+</interface>

@@ -1,0 +1,19 @@
+[Plugin]
+Module=hello-world
+Name=@PLUGIN_NAME@
+Description=@PLUGIN_DESCRIPTION@
+Version=@PLUGIN_VERSION@
+Authors=@PLUGIN_AUTHORS@
+Website=@PLUGIN_WEBSITE@
+Copyright=Copyright © 2025 @PLUGIN_AUTHORS@
+Builtin=false
+Hidden=false
+
+# Plugin capabilities
+Capabilities=header-bar-extension,dashboard-widget
+
+# Dependencies
+Depends=slate-core>=1.0
+
+# Loader information
+Loader=C

@@ -5,3 +5,6 @@ example_hcl_config = executable(
   link_with: [libslate],
   install: false,
 )
+
+# Example plugins
+# subdir('plugins')  # Temporarily disabled due to build dependencies

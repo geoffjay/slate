@@ -26,10 +26,9 @@ jobs:
             libglib2.0-dev \
             libgtk-4-dev \
             libadwaita-1-dev \
-            libgio2.0-dev \
             libsqlite3-dev \
             libgee-0.8-dev \
-            libpeas-2-dev \
+            libpeas-dev \
             gobject-introspection \
             libgirepository1.0-dev \
             python3-pip
@@ -72,7 +71,7 @@ jobs:
             libadwaita-devel \
             sqlite-devel \
             libgee-devel \
-            libpeas2-devel \
+            libpeas-devel \
             gobject-introspection-devel \
             python3-pip \
             git
@@ -113,10 +112,9 @@ jobs:
             libglib2.0-dev \
             libgtk-4-dev \
             libadwaita-1-dev \
-            libgio2.0-dev \
             libsqlite3-dev \
             libgee-0.8-dev \
-            libpeas-2-dev \
+            libpeas-dev \
             gobject-introspection \
             libgirepository1.0-dev \
             python3-pip

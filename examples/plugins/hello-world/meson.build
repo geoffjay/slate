@@ -21,11 +21,11 @@ hello_world_plugin = shared_library(
     dependency('libpeas-2'),
     dependency('glib-2.0'),
     dependency('gobject-2.0'),
+    libghcl_dep,
   ],
-  link_with: [libslate, libghcl],
+  link_with: [libslate],
   include_directories: [
     include_directories('../../../src/libslate'),
-    include_directories('../../../subprojects/libghcl/src'),
   ],
   install: true,
   install_dir: get_option('libdir') / 'slate' / 'plugins',

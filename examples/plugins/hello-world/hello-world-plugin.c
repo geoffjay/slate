@@ -74,13 +74,6 @@ hello_world_plugin_deactivate (SlatePluginInterface *plugin)
   }
 }
 
-static gboolean
-hello_world_plugin_is_active (SlatePluginInterface *plugin)
-{
-  HelloWorldPlugin *self = HELLO_WORLD_PLUGIN (plugin);
-  return self->active;
-}
-
 static const char *
 hello_world_plugin_get_plugin_name (SlatePluginInterface *plugin)
 {
@@ -93,35 +86,36 @@ hello_world_plugin_get_plugin_description (SlatePluginInterface *plugin)
   return "A simple example plugin demonstrating Slate's plugin system";
 }
 
-static const char *
-hello_world_plugin_get_version (SlatePluginInterface *plugin)
-{
-  return "1.0.0";
-}
-
 /* Header Bar Extension Implementation */
 
 static void
 on_hello_button_clicked (GtkButton *button, gpointer user_data)
 {
-  HelloWorldPlugin *self = HELLO_WORLD_PLUGIN (user_data);
-
   /* Show a simple toast notification */
   AdwToast *toast = adw_toast_new ("Hello from the Hello World plugin!");
   adw_toast_set_timeout (toast, 3);
 
   /* Find the main window to show the toast */
-  GtkWidget *toplevel = gtk_widget_get_root (GTK_WIDGET (button));
+  GtkRoot *toplevel = gtk_widget_get_root (GTK_WIDGET (button));
   if (ADW_IS_APPLICATION_WINDOW (toplevel)) {
     adw_toast_overlay_add_toast (
-      ADW_TOAST_OVERLAY (gtk_widget_get_first_child (toplevel)),
+      ADW_TOAST_OVERLAY (gtk_widget_get_first_child (GTK_WIDGET (toplevel))),
       toast
     );
   }
 }
 
-static GtkWidget *
-hello_world_plugin_create_header_widget (SlateHeaderBarExtension *extension)
+static GList *
+hello_world_plugin_create_start_widgets (SlateHeaderBarExtension *extension,
+                                         SlateHeaderBar          *header_bar)
+{
+  /* No start widgets for this plugin */
+  return NULL;
+}
+
+static GList *
+hello_world_plugin_create_end_widgets (SlateHeaderBarExtension *extension,
+                                       SlateHeaderBar          *header_bar)
 {
   HelloWorldPlugin *self = HELLO_WORLD_PLUGIN (extension);
 
@@ -133,21 +127,21 @@ hello_world_plugin_create_header_widget (SlateHeaderBarExtension *extension)
   g_signal_connect (self->header_button, "clicked",
                     G_CALLBACK (on_hello_button_clicked), self);
 
-  return self->header_button;
+  /* Return a list with our button */
+  return g_list_append (NULL, self->header_button);
 }
 
-static int
-hello_world_plugin_get_priority (SlateHeaderBarExtension *extension)
+static void
+hello_world_plugin_on_project_changed (SlateHeaderBarExtension *extension,
+                                       SlateHeaderBar          *header_bar,
+                                       const char              *project_path)
 {
-  /* Medium priority - will be placed after high priority extensions */
-  return 50;
-}
+  /* Update button state based on project */
+  HelloWorldPlugin *self = HELLO_WORLD_PLUGIN (extension);
 
-static const char *
-hello_world_plugin_get_position (SlateHeaderBarExtension *extension)
-{
-  /* Place in the end section of the header bar */
-  return "end";
+  if (self->header_button) {
+    gtk_widget_set_sensitive (self->header_button, project_path != NULL);
+  }
 }
 
 /* Interface Implementations */
@@ -157,18 +151,16 @@ slate_plugin_interface_init (SlatePluginInterfaceInterface *iface)
 {
   iface->activate = hello_world_plugin_activate;
   iface->deactivate = hello_world_plugin_deactivate;
-  iface->is_active = hello_world_plugin_is_active;
   iface->get_name = hello_world_plugin_get_plugin_name;
   iface->get_description = hello_world_plugin_get_plugin_description;
-  iface->get_version = hello_world_plugin_get_version;
 }
 
 static void
 slate_header_bar_extension_interface_init (SlateHeaderBarExtensionInterface *iface)
 {
-  iface->create_widget = hello_world_plugin_create_header_widget;
-  iface->get_priority = hello_world_plugin_get_priority;
-  iface->get_position = hello_world_plugin_get_position;
+  iface->create_start_widgets = hello_world_plugin_create_start_widgets;
+  iface->create_end_widgets = hello_world_plugin_create_end_widgets;
+  iface->on_project_changed = hello_world_plugin_on_project_changed;
 }
 
 /* Class Implementation */

@@ -7,6 +7,7 @@ integration_test_deps = [
   dependency('libpeas-2'),
   dependency('glib-2.0'),
   dependency('gobject-2.0'),
+  libghcl_dep,
 ]
 
 integration_tests = [
@@ -19,10 +20,9 @@ foreach test_name : integration_tests
     test_name,
     test_name + '.c',
     dependencies: integration_test_deps,
-    link_with: [libslate, libghcl],
+    link_with: [libslate],
     include_directories: [
       include_directories('../../src/libslate'),
-      include_directories('../../subprojects/libghcl/src'),
     ],
     install: false,
   )

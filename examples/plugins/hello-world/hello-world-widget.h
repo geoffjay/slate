@@ -25,7 +25,7 @@ G_BEGIN_DECLS
 
 #define HELLO_WORLD_TYPE_WIDGET (hello_world_widget_get_type())
 
-G_DECLARE_FINAL_TYPE (HelloWorldWidget, hello_world_widget, HELLO_WORLD, WIDGET, SlateDashboardCard)
+G_DECLARE_FINAL_TYPE (HelloWorldWidget, hello_world_widget, HELLO_WORLD, WIDGET, GtkWidget)
 
 /**
  * HelloWorldWidget:

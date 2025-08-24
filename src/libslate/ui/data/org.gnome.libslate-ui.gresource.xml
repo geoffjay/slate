@@ -3,4 +3,7 @@
   <gresource prefix="/org/gnome/libslate/ui">
     <file compressed="true" alias="box.ui">box.ui</file>
   </gresource>
+  <gresource prefix="/org/gnome/Slate/ui">
+    <file compressed="true" alias="slate-dashboard.ui">ui/slate-dashboard.ui</file>
+  </gresource>
 </gresources>

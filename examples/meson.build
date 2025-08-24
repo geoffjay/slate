@@ -7,4 +7,4 @@ example_hcl_config = executable(
 )
 
 # Example plugins
-# subdir('plugins')  # Temporarily disabled due to build dependencies
+subdir('plugins')

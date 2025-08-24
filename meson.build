@@ -68,10 +68,14 @@ add_global_arguments(c_flags, language: 'c')
 
 gnome = import('gnome')
 py = import('python').find_installation('python3.13', required: true)
-blueprint_compiler_prog = find_program('blueprint-compiler', required: true)
+blueprint_compiler_prog = find_program('blueprint-compiler', required: false)
+if not blueprint_compiler_prog.found()
+  blueprint_compiler_subproject = subproject('blueprint-compiler', required: true)
+  blueprint_compiler_prog = blueprint_compiler_subproject.get_variable('blueprint_compiler')
+endif
 
 # Subprojects
-libghcl_subproject = subproject('libghcl')
+libghcl_subproject = subproject('libghcl', required: true)
 libghcl_dep = libghcl_subproject.get_variable('libghcl_dep')
 
 lib_dependencies = [

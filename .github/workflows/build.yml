@@ -1,0 +1,142 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install base dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            meson \
+            ninja-build \
+            valac \
+            libglib2.0-dev \
+            libgtk-4-dev \
+            libadwaita-1-dev \
+            libgio2.0-dev \
+            libsqlite3-dev \
+            libgee-0.8-dev \
+            libpeas-2-dev \
+            gobject-introspection \
+            libgirepository1.0-dev \
+            python3-pip
+
+      - name: Install Python dependencies for gi-docgen
+        run: |
+          pip3 install jinja2 markdown markupsafe pygments typogrify
+
+      - name: Configure build (with subprojects)
+        run: |
+          meson setup builddir \
+            -Dgtk_doc=true \
+            -Dintrospection=true \
+            --wrap-mode=forcefallback
+
+      - name: Build project
+        run: meson compile -C builddir
+
+      - name: Run tests
+        run: meson test -C builddir --verbose
+
+  build-fedora:
+    runs-on: ubuntu-latest
+    container: fedora:latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          dnf install -y \
+            gcc \
+            meson \
+            ninja-build \
+            vala \
+            glib2-devel \
+            gtk4-devel \
+            libadwaita-devel \
+            sqlite-devel \
+            libgee-devel \
+            libpeas2-devel \
+            gobject-introspection-devel \
+            python3-pip \
+            git
+
+      - name: Install Python dependencies for gi-docgen
+        run: |
+          pip3 install jinja2 markdown markupsafe pygments typogrify
+
+      - name: Configure build (force subprojects)
+        run: |
+          meson setup builddir \
+            -Dgtk_doc=true \
+            -Dintrospection=true \
+            --wrap-mode=forcefallback
+
+      - name: Build project
+        run: meson compile -C builddir
+
+      - name: Run tests
+        run: meson test -C builddir --verbose
+
+  build-minimal:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install minimal dependencies (no blueprint-compiler)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            meson \
+            ninja-build \
+            valac \
+            libglib2.0-dev \
+            libgtk-4-dev \
+            libadwaita-1-dev \
+            libgio2.0-dev \
+            libsqlite3-dev \
+            libgee-0.8-dev \
+            libpeas-2-dev \
+            gobject-introspection \
+            libgirepository1.0-dev \
+            python3-pip
+          # Intentionally NOT installing blueprint-compiler to test subproject fallback
+
+      - name: Install Python dependencies for gi-docgen
+        run: |
+          pip3 install jinja2 markdown markupsafe pygments typogrify
+
+      - name: Configure build (should use blueprint-compiler subproject)
+        run: |
+          meson setup builddir \
+            -Dgtk_doc=true \
+            -Dintrospection=true
+
+      - name: Build project
+        run: meson compile -C builddir
+
+      - name: Verify subprojects were used
+        run: |
+          echo "Checking if blueprint-compiler subproject was used..."
+          ls -la builddir/subprojects/
+          test -d builddir/subprojects/blueprint-compiler

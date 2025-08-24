@@ -80,7 +80,7 @@ graph TB
 
 ## Planning Documents Structure
 
-### Specification Documents (`docs/spec/`)
+### Specification Documents (`doc/spec/`)
 
 Specification documents define the detailed requirements, architecture, and design for each major component of Slate. These documents serve as the authoritative reference for what needs to be built.
 
@@ -149,7 +149,7 @@ Specification for the flexible dashboard system providing configurable interface
 - Plugin integration for custom widgets
 - Performance optimization for real-time updates
 
-### Planning Documents (`docs/plan/`)
+### Planning Documents (`doc/plan/`)
 
 Planning documents break down the specifications into actionable work packages, tasks, and timelines. These documents provide the roadmap for implementation.
 

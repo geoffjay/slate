@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:doap="http://usefulinc.com/ns/doap#">
+
+  <doap:Project rdf:about="">
+    <doap:name xml:lang="en">Slate</doap:name>
+    <doap:shortdesc xml:lang="en">A configurable dashboard application for GNOME</doap:shortdesc>
+    <doap:description xml:lang="en">
+      Slate is a modern GNOME application that provides a configurable dashboard system
+      with plugin support. It allows users to create custom dashboards with various
+      widgets and components, all configured through HCL configuration files.
+    </doap:description>
+
+    <doap:homepage rdf:resource="https://github.com/geoffjay/slate" />
+    <doap:bug-database rdf:resource="https://github.com/geoffjay/slate/issues" />
+    <doap:category rdf:resource="http://api.gnome.org/doap-extensions#apps" />
+    <doap:programming-language>C</doap:programming-language>
+    <doap:programming-language>Vala</doap:programming-language>
+
+    <doap:maintainer>
+      <foaf:Person>
+        <foaf:name>Geoff Johnson</foaf:name>
+        <foaf:mbox rdf:resource="mailto:geoff.jay@gmail.com" />
+        <foaf:account>
+          <foaf:OnlineAccount>
+            <foaf:accountServiceHomepage rdf:resource="https://github.com/" />
+            <foaf:accountName>geoffjay</foaf:accountName>
+          </foaf:OnlineAccount>
+        </foaf:account>
+      </foaf:Person>
+    </doap:maintainer>
+
+    <doap:author>
+      <foaf:Person>
+        <foaf:name>Geoff Johnson</foaf:name>
+        <foaf:mbox rdf:resource="mailto:geoff.jay@gmail.com" />
+        <foaf:account>
+          <foaf:OnlineAccount>
+            <foaf:accountServiceHomepage rdf:resource="https://github.com/" />
+            <foaf:accountName>geoffjay</foaf:accountName>
+          </foaf:OnlineAccount>
+        </foaf:account>
+      </foaf:Person>
+    </doap:author>
+
+    <doap:license rdf:resource="http://usefulinc.com/doap/licenses/gpl" />
+
+    <doap:repository>
+      <doap:GitRepository>
+        <doap:location rdf:resource="https://github.com/geoffjay/slate.git" />
+        <doap:browse rdf:resource="https://github.com/geoffjay/slate" />
+      </doap:GitRepository>
+    </doap:repository>
+
+    <doap:release>
+      <doap:Version>
+        <doap:name>0.1.0</doap:name>
+        <doap:revision>0.1.0</doap:revision>
+      </doap:Version>
+    </doap:release>
+
+  </doap:Project>
+</rdf:RDF>

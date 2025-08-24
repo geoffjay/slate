@@ -14,11 +14,11 @@ Slate is a desktop application framework built with GTK4/Libadwaita and Vala, de
 
 ### Planning Documents
 
-- `docs/CONCEPT.md` - Original high-level concept and requirements
-- `docs/PLANNING.md` - Main planning overview with architecture and timeline
-- `docs/PLANNING_REVIEW.md` - Review of all planning materials
-- `docs/spec/` - Detailed specification documents by functional area
-- `docs/plan/` - Work breakdown and implementation planning documents
+- `doc/CONCEPT.md` - Original high-level concept and requirements
+- `doc/PLANNING.md` - Main planning overview with architecture and timeline
+- `doc/PLANNING_REVIEW.md` - Review of all planning materials
+- `doc/spec/` - Detailed specification documents by functional area
+- `doc/plan/` - Work breakdown and implementation planning documents
 
 ### Issue Management
 
@@ -121,7 +121,7 @@ Reference Issue #31 "Enhancement Phase Plan: Next Development Priorities" for:
 
 ### 3. Check Specification Gaps
 
-Compare current implementation against specifications in `docs/spec/`:
+Compare current implementation against specifications in `doc/spec/`:
 
 - Core application architecture
 - User interface components
@@ -240,7 +240,7 @@ gh issue list --label "component:plugin"
 cd builddir && ninja && ninja test
 
 # Review recent planning documents
-ls -la docs/plan/ docs/spec/
+ls -la doc/plan/ doc/spec/
 
 # Check current application functionality
 ./builddir/src/slate/slate
@@ -279,11 +279,11 @@ Slate is a desktop application framework built with GTK4/Libadwaita and Vala, de
 
 ### Planning Documents
 
-- `docs/CONCEPT.md` - Original high-level concept and requirements
-- `docs/PLANNING.md` - Main planning overview with architecture and timeline
-- `docs/PLANNING_REVIEW.md` - Review of all planning materials
-- `docs/spec/` - Detailed specification documents by functional area
-- `docs/plan/` - Work breakdown and implementation planning documents
+- `doc/CONCEPT.md` - Original high-level concept and requirements
+- `doc/PLANNING.md` - Main planning overview with architecture and timeline
+- `doc/PLANNING_REVIEW.md` - Review of all planning materials
+- `doc/spec/` - Detailed specification documents by functional area
+- `doc/plan/` - Work breakdown and implementation planning documents
 
 ### Issue Management
 
@@ -386,7 +386,7 @@ Reference Issue #31 "Enhancement Phase Plan: Next Development Priorities" for:
 
 ### 3. Check Specification Gaps
 
-Compare current implementation against specifications in `docs/spec/`:
+Compare current implementation against specifications in `doc/spec/`:
 
 - Core application architecture
 - User interface components
@@ -505,7 +505,7 @@ gh issue list --label "component:plugin"
 cd builddir && ninja && ninja test
 
 # Review recent planning documents
-ls -la docs/plan/ docs/spec/
+ls -la doc/plan/ doc/spec/
 
 # Check current application functionality
 ./builddir/src/slate/slate

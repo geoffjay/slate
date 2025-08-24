@@ -41,7 +41,7 @@ slate_init (void)
   g_type_ensure (SLATE_TYPE_DASHBOARD);
   g_type_ensure (SLATE_TYPE_CHART);
   g_type_ensure (SLATE_TYPE_DASHBOARD_CARD);
-  
+
   /* Register plugin interfaces */
   g_type_ensure (SLATE_TYPE_PLUGIN_INTERFACE);
   g_type_ensure (SLATE_TYPE_HEADER_BAR_EXTENSION);

@@ -89,4 +89,8 @@ subdir('src')
 subdir('tests')
 subdir('examples')
 
+if get_option('gtk_doc')
+  subdir('doc')
+endif
+
 message('\n'.join(status))

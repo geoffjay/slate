@@ -38,6 +38,24 @@ libslate = library(
   soversion: '0',
 )
 
+# Generate GObject Introspection data
+if get_option('introspection')
+  libslate_gir = gnome.generate_gir(
+    libslate,
+    sources: libslate_sources + libslate_headers,
+    nsversion: api_version,
+    namespace: 'Slate',
+    symbol_prefix: 'slate',
+    identifier_prefix: 'Slate',
+    includes: ['GLib-2.0', 'GObject-2.0', 'Gio-2.0', 'Gtk-4.0', 'Adw-1'],
+    install: true,
+    dependencies: libslate_deps,
+    extra_args: [
+      '--warn-all',
+    ],
+  )
+endif
+
 # Generate pkg-config file
 pkgconfig = import('pkgconfig')
 pkgconfig.generate(
